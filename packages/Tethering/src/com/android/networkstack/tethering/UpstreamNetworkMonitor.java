@@ -39,7 +39,6 @@ import android.net.NetworkRequest;
 import android.net.util.PrefixUtils;
 import android.net.util.SharedLog;
 import android.os.Handler;
-import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.Log;
 import android.util.SparseIntArray;
@@ -312,8 +311,7 @@ public class UpstreamNetworkMonitor {
         // Use VPN upstreams if hotspot settings allow.
         if (mVpnInternetNetwork != null &&
                 Settings.Secure.getInt(mContext.getContentResolver(),
-                       "tethering_allow_vpn_upstreams",
-                       0) == 1) {
+                        Settings.Secure.TETHERING_ALLOW_VPN_UPSTREAMS, 0) == 1) {
             return mNetworkMap.get(mVpnInternetNetwork);
         }
 
@@ -410,6 +408,7 @@ public class UpstreamNetworkMonitor {
         //       been lost (by any callback)
         //     - deletes the entry from the map only when the LISTEN_ALL
         //       callback gets notified.
+
         if (network.equals(mVpnInternetNetwork)) {
             mVpnInternetNetwork = null;
         }
