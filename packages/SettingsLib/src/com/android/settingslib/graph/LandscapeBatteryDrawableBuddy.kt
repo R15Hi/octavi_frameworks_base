@@ -197,21 +197,12 @@ open class LandscapeBatteryDrawableBuddy(private val context: Context, frameColo
         val fillFraction = batteryLevel / 100f
         val fillTop =
                 if (batteryLevel >= 95)
-                    fillRect.left
+                    fillRect.top
                 else
-                    fillRect.left + (fillRect.width() * (1 - fillFraction))
+                    fillRect.top + (fillRect.height() * (1 - fillFraction))
 
-        levelRect.left = Math.floor(fillTop.toDouble()).toFloat()
-        //levelPath.addRect(levelRect, Path.Direction.CCW)
-        levelPath.addRoundRect(levelRect,
-        floatArrayOf(4.0f,
-                     4.0f, 
-                     4.0f, 
-                     4.0f, 
-                     4.0f, 
-                     4.0f, 
-                     4.0f, 
-                     4.0f), Path.Direction.CCW)
+        levelRect.top = Math.floor(fillTop.toDouble()).toFloat()
+        levelPath.addRect(levelRect, Path.Direction.CCW)
 
         // The perimeter should never change
         unifiedPath.addPath(scaledPerimeter)
@@ -235,11 +226,10 @@ open class LandscapeBatteryDrawableBuddy(private val context: Context, frameColo
             // Dual tone means we draw the shape again, clipped to the charge level
             c.drawPath(unifiedPath, dualToneBackgroundFill)
             c.save()
-            c.clipRect(
-                    bounds.left - bounds.width() * fillFraction,
-                    0f,
+            c.clipRect(0f,
+                    bounds.bottom - bounds.height() * fillFraction,
                     bounds.right.toFloat(),
-                    bounds.left.toFloat())
+                    bounds.bottom.toFloat())
             c.drawPath(unifiedPath, fillPaint)
             c.restore()
         } else {
@@ -276,19 +266,19 @@ open class LandscapeBatteryDrawableBuddy(private val context: Context, frameColo
         c.restore()
 
         if (!charging && batteryLevel < 100 && showPercent) {
-            textPaint.textSize = bounds.width() * 0.38f
-            val textHeight = +textPaint.fontMetrics.ascent
-            val pctX = (bounds.width() + textHeight)* 0.7f
-            val pctY = bounds.height()  * 0.8f
+            textPaint.textSize = bounds.height() * 0.38f
+            val textHeight = -textPaint.fontMetrics.ascent
+            val pctX = bounds.width() * 0.5f
+            val pctY = (bounds.height() + textHeight) * 0.5f
 
             textPaint.color = fillColor
             c.drawText(batteryLevel.toString(), pctX, pctY, textPaint)
 
             textPaint.color = fillColor.toInt().inv() or 0xFF000000.toInt()
             c.save()
-            c.clipRect(fillRect.right,
-                    fillRect.top ,
-                    fillRect.left + (fillRect.width() * (1 - fillFraction)),
+            c.clipRect(fillRect.left,
+                    fillRect.top + (fillRect.height() * (1 - fillFraction)),
+                    fillRect.right,
                     fillRect.bottom)
             c.drawText(batteryLevel.toString(), pctX, pctY, textPaint)
             c.restore()
@@ -419,7 +409,6 @@ open class LandscapeBatteryDrawableBuddy(private val context: Context, frameColo
         // It is expected that this view only ever scale by the same factor in each dimension, so
         // just pick one to scale the strokeWidths
         val scaledStrokeWidth =
-
                 Math.max(b.right / WIDTH * PROTECTION_STROKE_WIDTH, PROTECTION_MIN_STROKE_WIDTH)
 
         fillColorStrokePaint.strokeWidth = scaledStrokeWidth
@@ -457,8 +446,8 @@ open class LandscapeBatteryDrawableBuddy(private val context: Context, frameColo
 
     companion object {
         private const val TAG = "LandscapeBatteryDrawableBuddy"
-        private const val WIDTH = 13f
-        private const val HEIGHT = 18f
+        private const val WIDTH = 12f
+        private const val HEIGHT = 20f
         private const val CRITICAL_LEVEL = 15
         // On a 12x20 grid, how wide to make the fill protection stroke.
         // Scales when our size changes
