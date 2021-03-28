@@ -6428,6 +6428,18 @@ public final class Settings {
                 "display_picture_adjustment";
 
         /**
+         * OOS DismissAll Button
+         * @hide
+         */
+        public static final String OOS_DISMISS_ALL_BUTTON = "oos_dismiss_all_button";
+
+        /**
+         * Keys we no longer back up under the current schema, but want to continue to
+         * process when restoring historical backup datasets.
+         *
+         * All settings in {@link LEGACY_RESTORE_SETTINGS} array *must* have a non-null validator,
+         * otherwise they won't be restored.
+         *
          * @hide
          */
         public static final String STATUS_BAR_BRIGHTNESS_CONTROL = "status_bar_brightness_control";
