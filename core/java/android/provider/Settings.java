@@ -6454,6 +6454,12 @@ public final class Settings {
          */
         public static final String BATTERY_LEVEL_COLORS = "battery_level_colors";
 
+         /**
+         * Select which System charging animation style to display
+         * @hide
+         */
+        public static final String CHARGING_ANIMATION_STYLE = "charging_animation_style";
+
         /**
          * process when restoring historical backup datasets.
          *
