@@ -29,7 +29,11 @@ import com.android.settingslib.R
 import com.android.settingslib.Utils
 import kotlin.math.min
 
-open class FullCircleBatteryDrawable(private val context: Context, frameColor: Int) : Drawable() {
+import android.provider.Settings.System;
+import android.os.UserHandle;
+
+class FullCircleBatteryDrawable(private val context: Context, frameColor: Int) : Drawable() {
+    private val criticalLevel: Int
     private val warningString: String
     private val framePaint: Paint
     private val batteryPaint: Paint
@@ -41,6 +45,7 @@ open class FullCircleBatteryDrawable(private val context: Context, frameColor: I
 
     private var chargeColor: Int
     private var iconTint = Color.WHITE
+    private var fillColor = Color.BLACK
     private var intrinsicWidth: Int
     private var intrinsicHeight: Int
     private var height = 0
@@ -51,14 +56,9 @@ open class FullCircleBatteryDrawable(private val context: Context, frameColor: I
     // Dual tone implies that battery level is a clipped overlay over top of the whole shape
     private var dualTone = false
 
-    private var batteryLevel = -1
-
     override fun getIntrinsicHeight() = intrinsicHeight
 
     override fun getIntrinsicWidth() = intrinsicWidth
-
-    open var criticalLevel: Int = context.resources.getInteger(
-            com.android.internal.R.integer.config_criticalBatteryWarningLevel)
 
     var charging = false
         set(value) {
@@ -81,6 +81,12 @@ open class FullCircleBatteryDrawable(private val context: Context, frameColor: I
         }
 
     var showPercent = false
+        set(value) {
+            field = value
+            postInvalidate()
+        }
+
+    var batteryLevel = -1
         set(value) {
             field = value
             postInvalidate()
@@ -136,7 +142,7 @@ open class FullCircleBatteryDrawable(private val context: Context, frameColor: I
         width = bounds.right - padding.right - (bounds.left + padding.left)
         intrinsicHeight = res.getDimensionPixelSize(R.dimen.battery_height)
         intrinsicWidth = res.getDimensionPixelSize(R.dimen.battery_height)
-        textPaint.textSize = height * 0.7f
+        textPaint.textSize = height * 0.6f
     }
 
     override fun getPadding(padding: Rect): Boolean {
@@ -149,19 +155,6 @@ open class FullCircleBatteryDrawable(private val context: Context, frameColor: I
         }
         padding.set(this.padding)
         return true
-    }
-
-    /**
-     * Set the fill level
-     */
-    public open fun setBatteryLevel(l: Int) {
-        batteryLevel = l
-        chargeColor = batteryColorForLevel(batteryLevel)
-        invalidateSelf()
-    }
-
-    public fun getBatteryLevel(): Int {
-        return batteryLevel
     }
 
     private fun getColorForLevel(percent: Int): Int {
@@ -247,7 +240,7 @@ open class FullCircleBatteryDrawable(private val context: Context, frameColor: I
                 else
                     warningString
             val pctY = (height + textHeight) * 0.45f
-            textPaint.color = batteryColorForLevel(batteryLevel)
+            textPaint.color = fillColor
             c.drawText(pctText, frame.centerX(), pctY, textPaint)
             var textPath = Path()
             textPaint.getTextPath(pctText, 0, pctText.length, frame.centerX(),
@@ -280,9 +273,22 @@ open class FullCircleBatteryDrawable(private val context: Context, frameColor: I
     override fun getOpacity() = PixelFormat.UNKNOWN
 
     init {
+        val setCustomBatteryLevelTint = System.getIntForUser(
+            context.getContentResolver(),
+            System.BATTERY_LEVEL_COLORS, 0, UserHandle.USER_CURRENT
+        ) === 1
+
         val res = context.resources
-        val color_levels = res.obtainTypedArray(R.array.batterymeter_color_levels)
-        val color_values = res.obtainTypedArray(R.array.batterymeter_color_values)
+        val color_levels = if(setCustomBatteryLevelTint)
+            res.obtainTypedArray(R.array.corvus_batterymeter_color_levels)
+        else
+            res.obtainTypedArray(R.array.batterymeter_color_levels)
+        
+        val color_values = if(setCustomBatteryLevelTint) 
+            res.obtainTypedArray(R.array.corvus_batterymeter_color_values)
+        else
+            res.obtainTypedArray(R.array.batterymeter_color_values)
+            
         colors = IntArray(2 * color_levels.length())
         for (i in 0 until color_levels.length()) {
             colors[2 * i] = color_levels.getInt(i, 0)
@@ -298,6 +304,9 @@ open class FullCircleBatteryDrawable(private val context: Context, frameColor: I
         color_levels.recycle()
         color_values.recycle()
         warningString = res.getString(R.string.battery_meter_very_low_overlay_symbol)
+        criticalLevel = res.getInteger(
+            com.android.internal.R.integer.config_criticalBatteryWarningLevel
+        )
         framePaint = Paint(Paint.ANTI_ALIAS_FLAG)
         framePaint.color = frameColor
         framePaint.isDither = true
@@ -307,8 +316,6 @@ open class FullCircleBatteryDrawable(private val context: Context, frameColor: I
         textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         textPaint.typeface = Typeface.create("sans-serif-condensed", Typeface.BOLD)
         textPaint.textAlign = Paint.Align.CENTER
-        textPaint.strokeWidth = 2f
-        textPaint.style = Paint.Style.STROKE
         chargeColor = Utils.getColorStateListDefaultColor(context, R.color.meter_consumed_color)
         powerSavePaint = Paint(Paint.ANTI_ALIAS_FLAG)
         powerSavePaint.color = Utils.getColorStateListDefaultColor(

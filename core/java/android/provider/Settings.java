@@ -6443,6 +6443,12 @@ public final class Settings {
 
         /**
          * Keys we no longer back up under the current schema, but want to continue to
+         * Toggle between stock and custom QS brightness slider
+         * @hide
+         */
+        public static final String BATTERY_LEVEL_COLORS = "battery_level_colors";
+
+        /**
          * process when restoring historical backup datasets.
          *
          * All settings in {@link LEGACY_RESTORE_SETTINGS} array *must* have a non-null validator,
@@ -6653,6 +6659,7 @@ public final class Settings {
             PRIVATE_SETTINGS.add(OMNI_CUSTOM_FP_ICON);
             PRIVATE_SETTINGS.add(DISPLAY_CUTOUT_MODE);
             PRIVATE_SETTINGS.add(STOCK_STATUSBAR_IN_HIDE);
+            PRIVATE_SETTINGS.add(BATTERY_LEVEL_COLORS);
         }
 
         /**

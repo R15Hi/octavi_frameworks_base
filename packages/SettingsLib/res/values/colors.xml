@@ -42,4 +42,23 @@
 
     <!-- Yellow 600, used for highlighting "important" conversations in settings & notifications -->
     <color name="important_conversation">#f9ab00</color>
+
+    <!-- Battery level colors -->
+    <color name="battery_full">#00C853</color>
+    <color name="battery_95">#08F983</color>
+    <color name="battery_90">#08F9BB</color>
+    <color name="battery_85">#08F9EE</color>
+    <color name="battery_80">#08BEF9</color>
+    <color name="battery_75">#08C7F9</color>
+    <color name="battery_70">#08A8F9</color>
+    <color name="battery_65">#0864F9</color>
+    <color name="battery_60">#080DF9</color>
+    <color name="battery_55">#4408F9</color>
+    <color name="battery_50">#7908F9</color>
+    <color name="battery_45">#9808F9</color>
+    <color name="battery_40">#BA08F9</color>
+    <color name="battery_35">#F908F8</color>
+    <color name="battery_30">#F908B7</color>
+    <color name="battery_25">#F90891</color>
+    <color name="battery_20">#C52481</color>
 </resources>

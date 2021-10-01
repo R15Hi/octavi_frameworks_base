@@ -603,6 +603,49 @@
         <item>?android:attr/colorError</item>
         <item>@android:color/white</item>
     </array>
+
+    <!-- Corvus Battery Levels  -->
+    <array name="corvus_batterymeter_color_levels">
+        <item>15</item>
+        <item>20</item>
+        <item>25</item>
+        <item>30</item>
+        <item>35</item>
+        <item>40</item>
+        <item>45</item>
+        <item>50</item>
+        <item>55</item>
+        <item>60</item>
+        <item>65</item>
+        <item>70</item>
+        <item>75</item>
+        <item>80</item>
+        <item>85</item>
+        <item>90</item>
+        <item>95</item>
+        <item>100</item>
+    </array>
+    <array name="corvus_batterymeter_color_values">
+        <item>?android:attr/colorError</item>
+        <item>@color/battery_20</item>
+        <item>@color/battery_25</item>
+        <item>@color/battery_30</item>
+        <item>@color/battery_35</item>
+        <item>@color/battery_40</item>
+        <item>@color/battery_45</item>
+        <item>@color/battery_50</item>
+        <item>@color/battery_55</item>
+        <item>@color/battery_60</item>
+        <item>@color/battery_65</item>
+        <item>@color/battery_70</item>
+        <item>@color/battery_75</item>
+        <item>@color/battery_80</item>
+        <item>@color/battery_85</item>
+        <item>@color/battery_90</item>
+        <item>@color/battery_95</item>
+        <item>@color/battery_full</item>
+    </array>
+
     <array name="batterymeter_bolt_points">
         <item>73</item> <item>0</item>
         <item>392</item><item>0</item>
