@@ -54,6 +54,30 @@ public class ThemesUtils {
         "com.android.system.switch.telegram", // 6
         "com.android.system.switch.stockish", //7
     };
+    
+    // Statusbar Signal icons
+    private static final String[] SIGNAL_BAR = {
+            "com.custom.systemui.signalbar_a",
+            "com.custom.systemui.signalbar_b",
+            "com.custom.systemui.signalbar_c",
+            "com.custom.systemui.signalbar_d",
+            "com.custom.systemui.signalbar_e",
+            "com.custom.systemui.signalbar_f",
+            "com.custom.systemui.signalbar_g",
+            "com.custom.systemui.signalbar_h",
+    };
+
+    // Statusbar Wifi icons
+    private static final String[] WIFI_BAR = {
+            "com.custom.systemui.wifibar_a",
+            "com.custom.systemui.wifibar_b",
+            "com.custom.systemui.wifibar_c",
+            "com.custom.systemui.wifibar_d",
+            "com.custom.systemui.wifibar_e",
+            "com.custom.systemui.wifibar_f",
+            "com.custom.systemui.wifibar_g",
+            "com.custom.systemui.wifibar_h",
+    };
 
     public static final String[] STATUSBAR_HEIGHT = {
             "com.gnonymous.gvisualmod.sbh_m", // 1
