@@ -68,7 +68,12 @@ LOCAL_REQUIRED_MODULES := \
 	NavigationBarModeGesturalOverlayExtraWideBack \
 	IconPackAcherusAndroidOverlay \
     IconPackAcherusSystemUIOverlay \
-	preinstalled-packages-platform-overlays.xml
+    IconPackOOSAndroidOverlay \
+    IconPackOOSLauncherOverlay \
+    IconPackOOSSettingsOverlay \
+    IconPackOOSSystemUIOverlay \
+    IconPackOOSThemePickerOverlay \
+    preinstalled-packages-platform-overlays.xml
 
 include $(BUILD_PHONY_PACKAGE)
 include $(CLEAR_VARS)
