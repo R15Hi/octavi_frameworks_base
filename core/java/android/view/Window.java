@@ -21,7 +21,9 @@ import static android.view.WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
 import android.annotation.ColorInt;
 import android.annotation.DrawableRes;
 import android.annotation.IdRes;
+import static android.view.WindowManager.LayoutParams.FLAG_SECURE;
 import android.annotation.LayoutRes;
+import android.provider.Settings;
 import android.annotation.NonNull;
 import android.annotation.Nullable;
 import android.annotation.StyleRes;
@@ -1186,6 +1188,10 @@ public abstract class Window {
      * @see #clearFlags
      */
     public void setFlags(int flags, int mask) {
+    	if ((mask & FLAG_SECURE) != 0 && Settings.Secure.getInt(mContext.getContentResolver(),
+                Settings.Secure.WINDOW_IGNORE_SECURE, 0) == 1) {
+            mask &= ~FLAG_SECURE;
+        }
         final WindowManager.LayoutParams attrs = getAttributes();
         attrs.flags = (attrs.flags&~mask) | (flags&mask);
         mForcedWindowFlags |= mask;
