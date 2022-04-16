@@ -219,12 +219,12 @@ public class ViewConfiguration {
     /**
      * Minimum velocity to initiate a fling, as measured in dips per second
      */
-    private static final int MINIMUM_FLING_VELOCITY = 60;
+    private static final int MINIMUM_FLING_VELOCITY = 160;
 
     /**
      * Maximum velocity to initiate a fling, as measured in dips per second
      */
-    private static final int MAXIMUM_FLING_VELOCITY = 8000;
+    private static final int MAXIMUM_FLING_VELOCITY = 20000;
 
     /**
      * Delay before dispatching a recurring accessibility event in milliseconds.
@@ -245,7 +245,7 @@ public class ViewConfiguration {
      * The coefficient of friction applied to flings/scrolls.
      */
     @UnsupportedAppUsage
-    private static final float SCROLL_FRICTION = 0.012f;
+    private static final float SCROLL_FRICTION = 0.003f;
 
     /**
      * Max distance in dips to overscroll for edge effects
