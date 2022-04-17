@@ -54,6 +54,12 @@ public class ThemesUtils {
         "com.android.system.switch.telegram", // 6
         "com.android.system.switch.stockish", //7
         "com.android.system.switch.a12", //8
+        "com.android.system.switch.colors", // 9
+        "com.android.system.switch.emotic", // 10
+        "com.android.system.switch.moon", // 11
+        "com.android.system.switch.small", // 12
+        "com.android.system.switch.weird", //13
+        "com.android.system.switch.gassist", //14
         
     };
     
