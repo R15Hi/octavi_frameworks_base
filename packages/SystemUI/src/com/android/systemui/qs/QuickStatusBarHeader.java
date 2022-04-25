@@ -384,11 +384,6 @@ public class QuickStatusBarHeader extends RelativeLayout implements
         mSpace = findViewById(R.id.space);
 
         // Tint for the battery icons are handled in setupHost()
-        mBatteryRemainingIcon = findViewById(R.id.batteryRemainingIcon);
-        // Don't need to worry about tuner settings for this icon
-        mBatteryRemainingIcon.setIgnoreTunerUpdates(true);
-        mBatteryRemainingIcon.setPercentShowMode(BatteryMeterView.MODE_ON);
-        mBatteryRemainingIcon.setOnClickListener(this);
         mRingerModeTextView.setSelected(true);
         mNextAlarmTextView.setSelected(true);
         mAllIndicatorsEnabled = mPrivacyItemController.getAllIndicatorsAvailable();
@@ -592,8 +587,6 @@ public class QuickStatusBarHeader extends RelativeLayout implements
     }
 
     private void updateSettingsQs() {
-        updateQSBatteryMode();
-        updateSBBatteryStyle();
         updateResources();
 	updateDataUsageView();
 	updateQsClockView();
@@ -620,33 +613,6 @@ public class QuickStatusBarHeader extends RelativeLayout implements
 	   mPillContainer.setVisibility(View.VISIBLE);
            queryAndUpdateWeather();
         }
-    }
-    private void updateQSBatteryMode() {
-        int showEstimate = Settings.System.getInt(mContext.getContentResolver(),
-        Settings.System.QS_BATTERY_MODE, 0);
-        if (showEstimate == 0) {
-            mBatteryRemainingIcon.setShowPercent(0);
-            mBatteryRemainingIcon.setPercentShowMode(BatteryMeterView.MODE_OFF);
-        } else if (showEstimate == 1) {
-            mBatteryRemainingIcon.setShowPercent(0);
-            mBatteryRemainingIcon.setPercentShowMode(BatteryMeterView.MODE_ON);
-        } else if (showEstimate == 2) {
-            mBatteryRemainingIcon.setShowPercent(1);
-            mBatteryRemainingIcon.setPercentShowMode(BatteryMeterView.MODE_OFF);
-        } else if (showEstimate == 3) {
-            mBatteryRemainingIcon.setShowPercent(0);
-            mBatteryRemainingIcon.setPercentShowMode(BatteryMeterView.MODE_ESTIMATE);
-        }
-        mBatteryRemainingIcon.updatePercentView();
-        mBatteryRemainingIcon.updateVisibility();
-    }
-
-    private void updateSBBatteryStyle() {
-        mBatteryRemainingIcon.setBatteryStyle(Settings.System.getInt(mContext.getContentResolver(),
-        Settings.System.STATUS_BAR_BATTERY_STYLE, 0));
-        mBatteryRemainingIcon.updateBatteryStyle();
-        mBatteryRemainingIcon.updatePercentView();
-        mBatteryRemainingIcon.updateVisibility();
     }
 
     private void updateDataUsageView() {

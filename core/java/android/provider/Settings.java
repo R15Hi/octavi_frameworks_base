@@ -4906,7 +4906,15 @@ public final class Settings {
          * @hide
          */
         public static final String BUTTON_BACKLIGHT_TIMEOUT = "button_backlight_timeout";
-
+        
+     /**
+         * Setting to determine whether or not to show the battery percentage in the qs status bar header.
+         *    0 - Show remaining time
+         *    1 - Show percentage
+         * @hide
+         */
+        public static final String DO_LEFT_BATTERY_TEXT = "do_left_battery_text";
+     
         /**
          * The button brightness to be used while the screen is on or after a button press,
          * depending on the value of {@link BUTTON_BACKLIGHT_TIMEOUT}.
