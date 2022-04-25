@@ -17,9 +17,20 @@
     <!-- Burn-in protection -->
     <dimen name="horizontal_max_swift">3.0dp</dimen>
     <dimen name="vertical_max_swift">1.0dp</dimen>
+    
     <!-- Height of the battery icon in the status bar. -->
-    <dimen name="status_bar_battery_icon_height_landscape">12.5dp</dimen>
-    <dimen name="status_bar_battery_icon_width_landscape">24dp</dimen>
+    <dimen name="status_bar_battery_icon_height_landscape_default">12.5dp</dimen>
+    <dimen name="status_bar_battery_icon_width_landscape_default">24dp</dimen>
+    <dimen name="status_bar_battery_icon_height_landscape_style_a_b">12dp</dimen>
+    <dimen name="status_bar_battery_icon_width_landscape_style_a_b">23dp</dimen>
+    <dimen name="status_bar_battery_icon_height_landscape_signal_musku">30.0dp</dimen>
+    <dimen name="status_bar_battery_icon_width_landscape_signal_musku">20.799988dp</dimen>
+    <dimen name="status_bar_battery_icon_height_landscape_line">30.0dp</dimen>
+    <dimen name="status_bar_battery_icon_width_landscape_line">20.799988dp</dimen>
+    <dimen name="status_bar_battery_icon_height_landscape_pill">30.0dp</dimen>
+    <dimen name="status_bar_battery_icon_width_landscape_pill">20.799988dp</dimen>
+    <dimen name="status_bar_battery_icon_height_landscape_buddy">30.0dp</dimen>
+    <dimen name="status_bar_battery_icon_width_landscape_buddy">20.799988dp</dimen>
 
     <!-- The width/height of the BatteryCharge view -->
     <dimen name="keyguard_batterycharge_indication_height">150dp</dimen>
