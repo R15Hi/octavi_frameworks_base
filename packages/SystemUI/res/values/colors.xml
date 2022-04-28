@@ -141,8 +141,8 @@
     <color name="dark_mode_icon_color_dual_tone_background">#3d000000</color>
     <color name="dark_mode_icon_color_dual_tone_fill">#7a000000</color>
 
-    <color name="light_mode_icon_color_dual_tone_background">#4dffffff</color>
-    <color name="light_mode_icon_color_dual_tone_fill">#ffffff</color>
+    <color name="light_mode_icon_color_dual_tone_background">#fffbc6df</color>
+    <color name="light_mode_icon_color_dual_tone_fill">@*android:color/accent_device_default_light</color>
 
     <color name="dark_mode_qs_icon_color_single_tone">#B3000000</color><!-- 70% black -->
     <color name="dark_mode_qs_icon_color_dual_tone_background">#3d000000</color>
