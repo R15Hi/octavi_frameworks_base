@@ -6277,6 +6277,12 @@ public final class Settings {
          * @hide
          */
         public static final String AMBIENT_LIGHT_REPEAT_DIRECTION = "ambient_light_repeat_direction";
+        
+        /**
+         * Number Of icons in QQS
+         * @hide
+         */
+        public static final String QQS_ICONS = "qqs_count";
 
         /**
          * Ambient Edge Light Layout
