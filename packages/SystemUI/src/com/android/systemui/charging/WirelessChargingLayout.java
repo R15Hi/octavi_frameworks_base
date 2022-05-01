@@ -118,6 +118,34 @@ public class WirelessChargingLayout extends FrameLayout {
                 chargingLottie.setFileName("fire_charging_animation.json");
                 chargingLottie.setSpeed(1.3f);
                 break;
+             case 6:
+                chargingLottie.setFileName("battery_charging_annimation.json");
+		        chargingLottie.setSpeed(1.3f);
+                break;
+            case 7:
+                chargingLottie.setFileName("colors_charging_annimation.json");
+		        chargingLottie.setSpeed(1.5f);
+                break;
+            case 8:
+                chargingLottie.setFileName("loading_circle_charging_annimation.json");
+                chargingLottie.setSpeed(1f);
+                break;
+            case 9:
+                chargingLottie.setFileName("plugin_charging_annimation.json");
+                chargingLottie.setSpeed(1f);
+                break;
+            case 10:
+                chargingLottie.setFileName("succeess_charging_annimation.json");
+                chargingLottie.setSpeed(1.3f);
+                break;   
+            case 11:
+                chargingLottie.setFileName("love_charging_annimation.json");
+                chargingLottie.setSpeed(1.3f);
+                break;
+            case 12:
+                chargingLottie.setFileName("portrait_charging_annimation.json");
+                chargingLottie.setSpeed(1.3f);
+                break;   
         }
         if (mChargingAnimation > 0) {
             chargingView.setVisibility(View.GONE);
