@@ -634,8 +634,8 @@ public class BatteryMeterView extends LinearLayout implements
 
     private void leftBatteyText() {
         mLeftBatteryPercent = Settings.System.getIntForUser(mContext.getContentResolver(),
-                Settings.System.DO_LEFT_BATTERY_TEXT, 1,
-                UserHandle.USER_CURRENT) == 0;
+                Settings.System.DO_LEFT_BATTERY_TEXT, 0,
+                UserHandle.USER_CURRENT) == 1;
         setLayoutDirection(mLeftBatteryPercent ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
         setOrientation(LinearLayout.HORIZONTAL);
         setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
