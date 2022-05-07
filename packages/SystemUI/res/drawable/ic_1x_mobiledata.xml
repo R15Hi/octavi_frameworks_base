@@ -1,30 +1,4 @@
-<!--
-     Copyright (C) 2018 The Android Open Source Project
-
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
-
-          http://www.apache.org/licenses/LICENSE-2.0
-
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
--->
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="12.35dp"
-    android:height="15dp"
-    android:viewportWidth="14"
-    android:viewportHeight="17">
-
-    <path
-        android:fillColor="#FFFFFFFF"
-        android:pathData="M3.77,13.48H2.55V5.05L0.46,5.98V4.84l3.12-1.36h0.19V13.48z" />
-    <path
-        android:fillColor="#FFFFFFFF"
-        android:pathData="M10.14,7.34l1.87-3.81h1.47L10.9,8.46l2.65,5.02h-1.48l-1.91-3.88l-1.92,3.88H6.74L9.4,8.46l-2.6-4.94h1.46L10.14,7.34z" />
-    <path
-        android:pathData="M 0 0 H 14 V 17 H 0 V 0 Z" />
+<?xml version="1.0" encoding="utf-8" ?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:height="15.0dip" android:width="13.469971dip" android:viewportWidth="13.47" android:viewportHeight="15.0">
+	<path android:fillColor="#ffffffff" android:pathData="M10,2.5L3.5,2.5a3,3 0,0 0,-3 3v4a3,3 0,0 0,3 3L10,12.5a3,3 0,0 0,3 -3v-4A3,3 0,0 0,10 2.5ZM5.41,9.74a0.42,0.42 0,0 1,-0.15 0.34,0.59 0.59,0 0,1 -0.37,0.13 0.57,0.57 0,0 1,-0.37 -0.13,0.41 0.41,0 0,1 -0.14,-0.34L4.38,5.9l-0.69,0.23 -0.18,0A0.52,0.52 0,0 1,3.15 6,0.45 0.45,0 0,1 3,5.67a0.49,0.49 0,0 1,0.4 -0.48l1,-0.35a0.86,0.86 0,0 1,0.27 0,0.72 0.72,0 0,1 0.71,0.71ZM10.3,10.06a0.53,0.53 0,0 1,-0.36 0.15A0.49,0.49 0,0 1,9.53 10L8.33,8.24 7.12,10a0.5,0.5 0,0 1,-0.41 0.23,0.53 0.53,0 0,1 -0.36,-0.15 0.41,0.41 0,0 1,-0.17 -0.35,0.46 0.46,0 0,1 0.09,-0.27l1.44,-2L6.38,5.56a0.46,0.46 0,0 1,-0.09 -0.27,0.43 0.43,0 0,1 0.16,-0.35 0.51,0.51 0,0 1,0.37 -0.15A0.5,0.5 0,0 1,7.23 5L8.32,6.59 9.42,5a0.5,0.5 0,0 1,0.41 -0.23,0.51 0.51,0 0,1 0.37,0.15 0.43,0.43 0,0 1,0.16 0.35,0.46 0.46,0 0,1 -0.09,0.27L8.93,7.42l1.45,2a0.46,0.46 0,0 1,0.09 0.27A0.41,0.41 0,0 1,10.3 10.06Z" />
 </vector>

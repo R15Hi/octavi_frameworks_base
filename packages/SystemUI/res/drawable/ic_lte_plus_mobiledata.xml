@@ -1,36 +1,4 @@
-<!--
-     Copyright (C) 2018 The Android Open Source Project
-
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
-
-          http://www.apache.org/licenses/LICENSE-2.0
-
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
--->
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="22.94dp"
-    android:height="15dp"
-    android:viewportWidth="26"
-    android:viewportHeight="17">
-
-    <path
-        android:fillColor="#FFFFFFFF"
-        android:pathData="M1.59,12.4h3.9v1.07H0.33V3.52h1.26V12.4z" />
-    <path
-        android:fillColor="#FFFFFFFF"
-        android:pathData="M11.35,4.6H8.73v8.88H7.48V4.6H4.87V3.52h6.48V4.6z" />
-    <path
-        android:fillColor="#FFFFFFFF"
-        android:pathData="M17.59,8.88h-3.52v3.53h4.1v1.07h-5.35V3.52h5.28V4.6h-4.03V7.8h3.52V8.88z" />
-    <path
-        android:fillColor="#FFFFFFFF"
-        android:pathData="M 23.32 5.74 L 23.32 3.39 L 22.02 3.39 L 22.02 5.74 L 19.67 5.74 L 19.67 7.04 L 22.02 7.04 L 22.02 9.39 L 23.32 9.39 L 23.32 7.04 L 25.67 7.04 L 25.67 5.74 Z" />
-    <path
-        android:pathData="M 0 0 H 26 V 17 H 0 V 0 Z" />
+<?xml version="1.0" encoding="utf-8" ?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:height="15.0dip" android:width="21.879974dip" android:viewportWidth="21.88" android:viewportHeight="15.0">
+	<path android:fillColor="#ffffffff" android:pathData="M18.38,2.5L3.5,2.5a3,3 0,0 0,-3 3v4a3,3 0,0 0,3 3L18.38,12.5a3,3 0,0 0,3 -3v-4A3,3 0,0 0,18.38 2.5ZM6.23,10a0.51,0.51 0,0 1,-0.34 0.13L3.5,10.13c-0.33,0 -0.5,-0.16 -0.5,-0.47L3,5.27a0.45,0.45 0,0 1,0.15 -0.35,0.55 0.55,0 0,1 0.36,-0.13 0.57,0.57 0,0 1,0.37 0.13A0.45,0.45 0,0 1,4 5.27L4,9.19L5.89,9.19a0.47,0.47 0,0 1,0.34 0.13,0.46 0.46,0 0,1 0.14,0.34A0.48,0.48 0,0 1,6.23 10ZM9.89,5.68a0.47,0.47 0,0 1,-0.34 0.13h-1L8.55,9.74a0.42,0.42 0,0 1,-0.15 0.34,0.52 0.52,0 0,1 -0.36,0.13 0.52,0.52 0,0 1,-0.37 -0.13,0.42 0.42,0 0,1 -0.15,-0.34L7.52,5.81h-1a0.45,0.45 0,0 1,-0.34 -0.13A0.44,0.44 0,0 1,6 5.35,0.45 0.45,0 0,1 6.15,5a0.46,0.46 0,0 1,0.34 -0.14L9.55,4.86a0.48,0.48 0,0 1,0.48 0.48A0.42,0.42 0,0 1,9.89 5.68ZM14,10a0.49,0.49 0,0 1,-0.34 0.13L11.12,10.13c-0.34,0 -0.51,-0.16 -0.51,-0.47L10.61,5.34c0,-0.31 0.17,-0.47 0.51,-0.47h2.45a0.48,0.48 0,0 1,0.48 0.48,0.46 0.46,0 0,1 -0.48,0.46L11.64,5.81L11.64,7h1.41a0.48,0.48 0,0 1,0.34 0.14,0.46 0.46,0 0,1 0.14,0.34 0.45,0.45 0,0 1,-0.14 0.33,0.47 0.47,0 0,1 -0.34,0.13L11.64,7.94L11.64,9.19h2a0.49,0.49 0,0 1,0.34 0.13,0.48 0.48,0 0,1 0.14,0.34A0.46,0.46 0,0 1,14 10ZM18.8,8.5a0.45,0.45 0,0 1,-0.34 0.13L17.2,8.63L17.2,9.75a0.4,0.4 0,0 1,-0.15 0.33,0.54 0.54,0 0,1 -0.37,0.13 0.52,0.52 0,0 1,-0.37 -0.13,0.42 0.42,0 0,1 -0.14,-0.33L16.17,8.63L15,8.63a0.47,0.47 0,0 1,-0.34 -0.13,0.45 0.45,0 0,1 -0.14,-0.33 0.46,0.46 0,0 1,0.14 -0.34A0.45,0.45 0,0 1,15 7.7h1.21L16.21,6.59a0.44,0.44 0,0 1,0.14 -0.34,0.52 0.52,0 0,1 0.37,-0.13 0.54,0.54 0,0 1,0.37 0.13,0.43 0.43,0 0,1 0.15,0.34L17.24,7.7h1.21a0.45,0.45 0,0 1,0.34 0.13,0.47 0.47,0 0,1 0.13,0.34A0.44,0.44 0,0 1,18.75 8.5Z" />
 </vector>
