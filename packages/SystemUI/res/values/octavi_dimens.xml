@@ -31,6 +31,8 @@
     <dimen name="status_bar_battery_icon_width_landscape_pill_musku">13dp</dimen>
     <dimen name="status_bar_battery_icon_height_landscape_buddy">28.0dip</dimen>
     <dimen name="status_bar_battery_icon_width_landscape_buddy">22.0dip</dimen>
+    <dimen name="status_bar_battery_icon_height_landscape_push">38.0dip</dimen>
+    <dimen name="status_bar_battery_icon_width_landscape_push">26.799988dip</dimen>
 
     <!-- The width/height of the BatteryCharge view -->
     <dimen name="keyguard_batterycharge_indication_height">150dp</dimen>
