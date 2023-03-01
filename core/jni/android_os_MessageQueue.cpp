@@ -51,21 +51,6 @@ public:
 
     virtual int handleEvent(int fd, int events, void* data);
 
-    /**
-     * A simple proxy that holds a weak reference to a looper callback.
-     */
-    class WeakLooperCallback : public LooperCallback {
-    protected:
-        virtual ~WeakLooperCallback();
-
-    public:
-        WeakLooperCallback(const wp<LooperCallback>& callback);
-        virtual int handleEvent(int fd, int events, void* data);
-
-    private:
-        wp<LooperCallback> mCallback;
-    };
-
 private:
     JNIEnv* mPollEnv;
     jobject mPollObj;
@@ -146,8 +131,7 @@ void NativeMessageQueue::setFileDescriptorEvents(int fd, int events) {
         if (events & CALLBACK_EVENT_OUTPUT) {
             looperEvents |= Looper::EVENT_OUTPUT;
         }
-        mLooper->addFd(fd, Looper::POLL_CALLBACK, looperEvents,
-                sp<WeakLooperCallback>::make(this),
+        mLooper->addFd(fd, Looper::POLL_CALLBACK, looperEvents, this,
                 reinterpret_cast<void*>(events));
     } else {
         mLooper->removeFd(fd);
@@ -175,24 +159,6 @@ int NativeMessageQueue::handleEvent(int fd, int looperEvents, void* data) {
         setFileDescriptorEvents(fd, newWatchedEvents);
     }
     return 1;
-}
-
-
-// --- NativeMessageQueue::WeakLooperCallback ---
-
-NativeMessageQueue::WeakLooperCallback::WeakLooperCallback(const wp<LooperCallback>& callback) :
-        mCallback(callback) {
-}
-
-NativeMessageQueue::WeakLooperCallback::~WeakLooperCallback() {
-}
-
-int NativeMessageQueue::WeakLooperCallback::handleEvent(int fd, int events, void* data) {
-    sp<LooperCallback> callback = mCallback.promote();
-    if (callback != nullptr) {
-        return callback->handleEvent(fd, events, data);
-    }
-    return 0;
 }
 
 
