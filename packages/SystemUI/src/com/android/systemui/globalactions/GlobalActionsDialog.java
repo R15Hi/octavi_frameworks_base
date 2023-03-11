@@ -32,6 +32,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.Nullable;
 import android.app.ActivityManager;
+import android.app.ActivityTaskManager;
 import android.app.Dialog;
 import android.app.IActivityManager;
 import android.app.PendingIntent;
@@ -56,15 +57,14 @@ import android.graphics.drawable.Drawable;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraAccessException;
-import android.graphics.Rect;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.PowerManager;
 import android.os.Process;
-import android.os.Message;
 import android.os.RemoteException;
 import android.os.SystemProperties;
 import android.os.UserHandle;
@@ -84,7 +84,6 @@ import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.IWindowManager;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -138,10 +137,8 @@ import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.GlobalActions.GlobalActionsManager;
 import com.android.systemui.plugins.GlobalActionsPanelPlugin;
 import com.android.systemui.settings.CurrentUserContextTracker;
-import com.android.systemui.statusbar.BlurUtils;
 import com.android.systemui.statusbar.NotificationShadeDepthController;
 import com.android.systemui.statusbar.phone.NotificationShadeWindowController;
-import com.android.systemui.statusbar.phone.ScrimController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.tuner.TunerService;
@@ -274,7 +271,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
     private int mDialogPressDelay = DIALOG_PRESS_DELAY; // ms
     private Handler mMainHandler;
     private CurrentUserContextTracker mCurrentUserContextTracker;
-    private final BlurUtils mBlurUtils;
     @VisibleForTesting
     boolean mShowLockScreenCardsAndControls = false;
 
@@ -335,7 +331,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
             UiEventLogger uiEventLogger,
             RingerModeTracker ringerModeTracker, SysUiState sysUiState, @Main Handler handler,
             ControlsComponent controlsComponent,
-            CurrentUserContextTracker currentUserContextTracker, BlurUtils blurUtils) {
+            CurrentUserContextTracker currentUserContextTracker) {
         mContext = context;
         mWindowManagerFuncs = windowManagerFuncs;
         mAudioManager = audioManager;
@@ -365,7 +361,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
         mSysUiState = sysUiState;
         mMainHandler = handler;
         mCurrentUserContextTracker = currentUserContextTracker;
-        mBlurUtils = blurUtils;
 
         // receive broadcasts
         IntentFilter filter = new IntentFilter();
@@ -563,8 +558,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
         mDialog.getWindow().setFlags(FLAG_ALT_FOCUSABLE_IM, FLAG_ALT_FOCUSABLE_IM);
         mDialog.show();
         mWindowManagerFuncs.onGlobalActionsShown();
-
-        rescheduleBurninTimeout();
     }
 
     @VisibleForTesting
@@ -575,7 +568,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
         if (!mDeviceProvisioned && !action.showBeforeProvisioning()) {
             return false;
         }
-        return action.shouldShow();
+        return true;
     }
 
     /**
@@ -596,6 +589,14 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
             mItems.add(action);
         } else {
             mOverflowItems.add(action);
+        }
+    }
+
+    private boolean isInLockTaskMode() {
+        try {
+            return ActivityTaskManager.getService().isInLockTaskMode();
+        } catch (RemoteException e) {
+            return false;
         }
     }
 
@@ -692,7 +693,9 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
             if (GLOBAL_ACTION_KEY_POWER.equals(actionKey)) {
                 addIfShouldShowAction(tempActions, shutdownAction);
             } else if (GLOBAL_ACTION_KEY_AIRPLANE.equals(actionKey)) {
-                addIfShouldShowAction(tempActions, mAirplaneModeOn);
+                if (!isInLockTaskMode()){
+                    addIfShouldShowAction(tempActions, mAirplaneModeOn);
+                }
             } else if (GLOBAL_ACTION_KEY_BUGREPORT.equals(actionKey)) {
                 if (shouldDisplayBugReport(currentUser.get())) {
                     addIfShouldShowAction(tempActions, new BugReportAction());
@@ -702,14 +705,18 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
                     addIfShouldShowAction(tempActions, mSilentModeAction);
                 }
             } else if (GLOBAL_ACTION_KEY_USERS.equals(actionKey)) {
-                if (SystemProperties.getBoolean("fw.power_user_switcher", false)) {
-                    addUserActions(tempActions, currentUser.get());
+                if (!isInLockTaskMode()){
+                    if (SystemProperties.getBoolean("fw.power_user_switcher", false)) {
+                        addUserActions(tempActions, currentUser.get());
+                    }
                 }
             } else if (GLOBAL_ACTION_KEY_SETTINGS.equals(actionKey)) {
                 addIfShouldShowAction(tempActions, getSettingsAction());
             } else if (GLOBAL_ACTION_KEY_LOCKDOWN.equals(actionKey)) {
-                if (shouldDisplayLockdown(currentUser.get())) {
-                    addIfShouldShowAction(tempActions, new LockDownAction());
+                if (!isInLockTaskMode()){
+                    if (shouldDisplayLockdown(currentUser.get())) {
+                        addIfShouldShowAction(tempActions, new LockDownAction());
+                    }
                 }
             } else if (GLOBAL_ACTION_KEY_VOICEASSIST.equals(actionKey)) {
                 addIfShouldShowAction(tempActions, getVoiceAssistAction());
@@ -719,7 +726,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
                 addIfShouldShowAction(tempActions, restartAction);
                 // if Restart action is available, add advanced restart actions too
                 if (advancedRebootEnabled(mContext)) {
-		    addIfShouldShowAction(tempActions, restartBootloaderAction);
+					addIfShouldShowAction(tempActions, restartBootloaderAction);
                     addIfShouldShowAction(tempActions, restartRecoveryAction);
                     addIfShouldShowAction(tempActions, restartSystemUiAction);
                 }
@@ -821,14 +828,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
                 this::getWalletViewController, mDepthController, mSysuiColorExtractor,
                 mStatusBarService, mNotificationShadeWindowController,
                 controlsAvailable(), uiController,
-                mSysUiState, this::onRotate, mKeyguardShowing, mPowerAdapter,
-                mBlurUtils) {
-            @Override
-            public boolean dispatchTouchEvent(MotionEvent event) {
-                rescheduleBurninTimeout();
-                return super.dispatchTouchEvent(event);
-            }
-        };
+                mSysUiState, this::onRotate, mKeyguardShowing, mPowerAdapter);
 
         if (shouldShowLockMessage(dialog)) {
             dialog.showLockMessage();
@@ -838,11 +838,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
         dialog.setOnShowListener(this);
 
         return dialog;
-    }
-
-    private void rescheduleBurninTimeout() {
-        mHandler.removeMessages(MESSAGE_DISMISS);
-        mHandler.sendEmptyMessageDelayed(MESSAGE_DISMISS, BURNIN_DISMISS_DELAY);
     }
 
     @VisibleForTesting
@@ -872,7 +867,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
 
     private boolean advancedRebootEnabled(Context context) {
         boolean advancedRebootEnabled = Settings.System.getIntForUser(context.getContentResolver(),
-                Settings.System.ADVANCED_REBOOT, 0, UserHandle.USER_CURRENT) == 1;
+                Settings.System.ADVANCED_REBOOT, 1, UserHandle.USER_CURRENT) == 1;
         return advancedRebootEnabled;
     }
 
@@ -1038,8 +1033,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
             messageView.setTextColor(textColor);
             messageView.setSelected(true); // necessary for marquee to work
             ImageView icon = v.findViewById(R.id.icon);
-            icon.getDrawable().setTint(v.getResources().getColor(
-                    com.android.systemui.R.color.global_actions_emergency_background));
+            icon.getDrawable().setTint(textColor);
             return v;
         }
 
@@ -1834,10 +1828,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
          * @return
          */
         CharSequence getMessage();
-
-        default boolean shouldShow() {
-            return true;
-        }
     }
 
     /**
@@ -2377,7 +2367,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
             default:
                 break;
         }
-    }
+    };
 
     private ContentObserver mAirplaneModeObserver = new ContentObserver(mMainHandler) {
         @Override
@@ -2390,7 +2380,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
     private static final int MESSAGE_REFRESH = 1;
     private static final int DIALOG_DISMISS_DELAY = 300; // ms
     private static final int DIALOG_PRESS_DELAY = 850; // ms
-    private static final int BURNIN_DISMISS_DELAY = 60000; // ms
 
     @VisibleForTesting void setZeroDialogPressDelayForTesting() {
         mDialogPressDelay = 0; // ms
@@ -2450,7 +2439,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
     }
 
     @VisibleForTesting
-    static class ActionsDialog extends Dialog implements DialogInterface,
+    static final class ActionsDialog extends Dialog implements DialogInterface,
             ColorExtractor.OnColorsChangedListener {
 
         private final Context mContext;
@@ -2475,7 +2464,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
         private Dialog mPowerOptionsDialog;
         private final Runnable mOnRotateCallback;
         private final boolean mControlsAvailable;
-        private final BlurUtils mBlurUtils;
 
         private ControlsUiController mControlsUiController;
         private ViewGroup mControlsView;
@@ -2490,7 +2478,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
                 NotificationShadeWindowController notificationShadeWindowController,
                 boolean controlsAvailable, @Nullable ControlsUiController controlsUiController,
                 SysUiState sysuiState, Runnable onRotateCallback, boolean keyguardShowing,
-                MyPowerOptionsAdapter powerAdapter, BlurUtils blurUtils) {
+                MyPowerOptionsAdapter powerAdapter) {
             super(context, com.android.systemui.R.style.Theme_SystemUI_Dialog_GlobalActions);
             mContext = context;
             mAdapter = adapter;
@@ -2506,7 +2494,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
             mOnRotateCallback = onRotateCallback;
             mKeyguardShowing = keyguardShowing;
             mWalletFactory = walletFactory;
-            mBlurUtils = blurUtils;
 
             // Window initialization
             Window window = getWindow();
@@ -2685,8 +2672,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
             initializeWalletView();
             if (mBackgroundDrawable == null) {
                 mBackgroundDrawable = new ScrimDrawable();
-                mScrimAlpha = mBlurUtils.supportsBlursOnWindows() ?
-                        ScrimController.BLUR_SCRIM_ALPHA : ScrimController.BUSY_SCRIM_ALPHA;
+                mScrimAlpha = 0.54f;
             }
             getWindow().setBackgroundDrawable(mBackgroundDrawable);
         }
@@ -2700,33 +2686,12 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
             contentParent.setClipToPadding(false);
         }
 
-        /**
-         * A workaround for dismissing all dialogs once touched outside.
-         * Workaround is for setCanceledOnTouchOutside(true) not working
-         */ 
-        @Override
-        public boolean dispatchTouchEvent(MotionEvent event) {
-            Rect viewRect = new Rect();
-            mGlobalActionsLayout.getGlobalVisibleRect(viewRect);
-            if (!viewRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                dismissForControlsActivity();
-                return true;
-            }
-
-            return super.dispatchTouchEvent(event);
-        }
-
         @Override
         protected void onStart() {
             super.setCanceledOnTouchOutside(true);
             super.onStart();
             mGlobalActionsLayout.updateList();
 
-            if (mBackgroundDrawable instanceof ScrimDrawable) {
-                mColorExtractor.addOnColorsChangedListener(this);
-                GradientColors colors = mColorExtractor.getNeutralColors();
-                updateColors(colors, false /* animate */);
-            }
         }
 
         /**

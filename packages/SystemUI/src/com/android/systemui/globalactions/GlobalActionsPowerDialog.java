@@ -57,7 +57,7 @@ public class GlobalActionsPowerDialog {
         window.setTitle(""); // prevent Talkback from speaking first item name twice
 
         Drawable drawable = res.getDrawable(
-                com.android.systemui.R.drawable.control_dialog_background, context.getTheme());
+                com.android.systemui.R.drawable.control_background, context.getTheme());
         drawable.setAlpha(mPowerMenuBackgroundAlpha);
         window.setBackgroundDrawable(drawable);
         window.addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
