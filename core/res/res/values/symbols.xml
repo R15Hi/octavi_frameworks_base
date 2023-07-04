@@ -3285,6 +3285,16 @@
   <java-symbol type="string" name="config_batterymeterLandBoltPathPush" />
   <java-symbol type="string" name="config_batterymeterLandPowersavePathPush" />
   <java-symbol type="string" name="config_batterymeterLandErrorPerimeterPathPush" />
+  <java-symbol type="string" name="config_batterymeterLandPerimeterPathiOS15" />
+  <java-symbol type="string" name="config_batterymeterLandFillMaskiOS15" />
+  <java-symbol type="string" name="config_batterymeterLandBoltPathiOS15" />
+  <java-symbol type="string" name="config_batterymeterLandPowersavePathiOS15" />
+  <java-symbol type="string" name="config_batterymeterLandErrorPerimeterPathiOS15" />
+  <java-symbol type="string" name="config_batterymeterLandPerimeterPathiOS16" />
+  <java-symbol type="string" name="config_batterymeterLandFillMaskiOS16" />
+  <java-symbol type="string" name="config_batterymeterLandBoltPathiOS16" />
+  <java-symbol type="string" name="config_batterymeterLandPowersavePathiOS16" />
+  <java-symbol type="string" name="config_batterymeterLandErrorPerimeterPathiOS16" />
   <java-symbol type="bool" name="config_debugEnableAutomaticSystemServerHeapDumps" />
   <java-symbol type="integer" name="config_debugSystemServerPssThresholdBytes" />
 
