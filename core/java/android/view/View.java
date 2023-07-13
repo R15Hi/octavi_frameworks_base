@@ -20342,6 +20342,8 @@ public class View implements Drawable.Callback, KeyEvent.Callback,
         mCurrentAnimation = null;
 
         if ((mViewFlags & TOOLTIP) == TOOLTIP) {
+            removeCallbacks(mTooltipInfo.mShowTooltipRunnable);
+            removeCallbacks(mTooltipInfo.mHideTooltipRunnable);
             hideTooltip();
         }
 
