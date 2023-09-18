@@ -1830,6 +1830,11 @@ public class AccountManagerService
                                 + ", skipping since the account already exists");
                         return false;
                     }
+                    if (accounts.accountsDb.findAllDeAccounts().size() > 100) {
+                        Log.w(TAG, "insertAccountIntoDatabase: " + account.toSafeString()
+                                + ", skipping since more than 50 accounts on device exist");
+                        return false;
+                    }
                     long accountId = accounts.accountsDb.insertCeAccount(account, password);
                     if (accountId < 0) {
                         Log.w(TAG, "insertAccountIntoDatabase: " + account.toSafeString()
@@ -3426,8 +3431,7 @@ public class AccountManagerService
             Bundle.setDefusable(result, true);
             mNumResults++;
             Intent intent = null;
-            if (result != null
-                    && (intent = result.getParcelable(AccountManager.KEY_INTENT)) != null) {
+            if (result != null) {
                 if (!checkKeyIntent(
                         Binder.getCallingUid(),
                         result)) {
@@ -4788,15 +4792,14 @@ public class AccountManagerService
             }
 
             Intent intent = bundle.getParcelable(AccountManager.KEY_INTENT);
+            if (intent == null) {
+                return true;
+            }
             // Explicitly set an empty ClipData to ensure that we don't offer to
             // promote any Uris contained inside for granting purposes
             if (intent.getClipData() == null) {
                 intent.setClipData(ClipData.newPlainText(null, null));
             }
-            intent.setFlags(intent.getFlags() & ~(Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                    | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
-                    | Intent.FLAG_GRANT_PREFIX_URI_PERMISSION));
             long bid = Binder.clearCallingIdentity();
             try {
                 PackageManager pm = mContext.getPackageManager();
@@ -4839,8 +4842,27 @@ public class AccountManagerService
             Bundle simulateBundle = p.readBundle();
             p.recycle();
             Intent intent = bundle.getParcelable(AccountManager.KEY_INTENT);
+
+            if (intent != null && intent.getClass() != Intent.class) {
+                return false;
+            }
             Intent simulateIntent = simulateBundle.getParcelable(AccountManager.KEY_INTENT);
-            return (intent.filterEquals(simulateIntent));
+            if (intent == null) {
+                return (simulateIntent == null);
+            }
+            if (!intent.filterEquals(simulateIntent)) {
+                return false;
+            }
+
+            if (intent.getSelector() != simulateIntent.getSelector()) {
+                return false;
+            }
+
+            int prohibitedFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                    | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
+                    | Intent.FLAG_GRANT_PREFIX_URI_PERMISSION;
+            return (simulateIntent.getFlags() & prohibitedFlags) == 0;
         }
 
         private boolean isExportedSystemActivity(ActivityInfo activityInfo) {
@@ -4985,8 +5007,7 @@ public class AccountManagerService
                     }
                 }
             }
-            if (result != null
-                    && (intent = result.getParcelable(AccountManager.KEY_INTENT)) != null) {
+            if (result != null) {
                 if (!checkKeyIntent(
                         Binder.getCallingUid(),
                         result)) {

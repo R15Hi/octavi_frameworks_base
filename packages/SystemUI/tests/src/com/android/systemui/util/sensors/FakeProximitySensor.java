@@ -20,7 +20,6 @@ import com.android.systemui.util.concurrency.DelayableExecutor;
 
 public class FakeProximitySensor extends ProximitySensor {
     private boolean mAvailable;
-    private boolean mRegistered;
 
     public FakeProximitySensor(ThresholdSensor primary, ThresholdSensor secondary,
             DelayableExecutor delayableExecutor) {
@@ -38,22 +37,17 @@ public class FakeProximitySensor extends ProximitySensor {
     }
 
     @Override
-    public boolean isRegistered() {
-        return mRegistered;
-    }
-
-    @Override
     public boolean isLoaded() {
         return mAvailable;
     }
 
     @Override
     protected void registerInternal() {
-        mRegistered = !mPaused;
+        // no-op
     }
 
     @Override
     protected void unregisterInternal() {
-        mRegistered = false;
+        // no-op
     }
 }

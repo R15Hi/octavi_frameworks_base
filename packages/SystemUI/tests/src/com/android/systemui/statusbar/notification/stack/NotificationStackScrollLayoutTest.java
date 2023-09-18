@@ -110,8 +110,6 @@ import org.mockito.junit.MockitoRule;
 import java.util.ArrayList;
 import java.util.List;
 
-import dagger.Lazy;
-
 /**
  * Tests for {@link NotificationStackScrollLayout}.
  */
@@ -143,7 +141,7 @@ public class NotificationStackScrollLayoutTest extends SysuiTestCase {
     @Mock private NotificationSection mNotificationSection;
     @Mock private NotificationLockscreenUserManager mLockscreenUserManager;
     @Mock private FeatureFlags mFeatureFlags;
-    @Mock private Lazy<BubbleController> mBubbleControllerLazy;
+    @Mock private BubbleController mBubbleController;
     private UserChangedListener mUserChangedListener;
     private NotificationEntryManager mEntryManager;
     private int mOriginalInterruptionModelSetting;
@@ -194,7 +192,7 @@ public class NotificationStackScrollLayoutTest extends SysuiTestCase {
                 () -> mock(NotificationRowBinder.class),
                 () -> mRemoteInputManager,
                 mock(LeakDetector.class),
-                mBubbleControllerLazy,
+                () -> mBubbleController,
                 mock(ForegroundServiceDismissalFeatureController.class)
         );
         mEntryManager.setUpWithPresenter(mock(NotificationPresenter.class));

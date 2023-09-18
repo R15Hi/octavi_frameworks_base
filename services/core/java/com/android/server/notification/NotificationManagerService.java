@@ -59,7 +59,6 @@ import static android.content.pm.PackageManager.MATCH_ALL;
 import static android.content.pm.PackageManager.MATCH_DIRECT_BOOT_AWARE;
 import static android.content.pm.PackageManager.MATCH_DIRECT_BOOT_UNAWARE;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static android.media.AudioAttributes.FLAG_BYPASS_INTERRUPTION_POLICY;
 import static android.media.AudioAttributes.USAGE_NOTIFICATION_RINGTONE;
 import static android.os.IServiceManager.DUMP_FLAG_PRIORITY_CRITICAL;
 import static android.os.IServiceManager.DUMP_FLAG_PRIORITY_NORMAL;
@@ -2574,7 +2573,7 @@ public class NotificationManagerService extends SystemService {
         }
     }
 
-    private void createNotificationChannelGroup(String pkg, int uid, NotificationChannelGroup group,
+    void createNotificationChannelGroup(String pkg, int uid, NotificationChannelGroup group,
             boolean fromApp, boolean fromListener) {
         Objects.requireNonNull(group);
         Objects.requireNonNull(pkg);
@@ -3607,7 +3606,8 @@ public class NotificationManagerService extends SystemService {
 
             final int callingUid = Binder.getCallingUid();
             NotificationChannelGroup groupToDelete =
-                    mPreferencesHelper.getNotificationChannelGroup(groupId, pkg, callingUid);
+                    mPreferencesHelper.getNotificationChannelGroupWithChannels(
+                            pkg, callingUid, groupId, false);
             if (groupToDelete != null) {
                 // Preflight for allowability
                 final int userId = UserHandle.getUserId(callingUid);
@@ -4524,7 +4524,16 @@ public class NotificationManagerService extends SystemService {
             }
             enforcePolicyAccess(Binder.getCallingUid(), "addAutomaticZenRule");
 
-            return mZenModeHelper.addAutomaticZenRule(pkg, automaticZenRule,
+            // If the calling app is the system (from any user), take the package name from the
+            // rule's owner rather than from the caller's package.
+            String rulePkg = pkg;
+            if (isCallingAppIdSystem()) {
+                if (automaticZenRule.getOwner() != null) {
+                    rulePkg = automaticZenRule.getOwner().getPackageName();
+                }
+            }
+
+            return mZenModeHelper.addAutomaticZenRule(rulePkg, automaticZenRule,
                     "addAutomaticZenRule");
         }
 
@@ -4971,6 +4980,11 @@ public class NotificationManagerService extends SystemService {
                 boolean granted) {
             Objects.requireNonNull(listener);
             checkCallerIsSystemOrShell();
+            if (granted && listener.flattenToString().length()
+                    > NotificationManager.MAX_SERVICE_COMPONENT_NAME_LENGTH) {
+                throw new IllegalArgumentException(
+                        "Component name too long: " + listener.flattenToString());
+            }
             final long identity = Binder.clearCallingIdentity();
             try {
                 if (mAllowedManagedServicePackages.test(
@@ -5882,8 +5896,10 @@ public class NotificationManagerService extends SystemService {
         // Fix the notification as best we can.
         try {
             fixNotification(notification, pkg, tag, id, userId);
-
         } catch (Exception e) {
+            if (notification.isForegroundService()) {
+                throw new SecurityException("Invalid FGS notification", e);
+            }
             Slog.e(TAG, "Cannot fix notification", e);
             return;
         }
@@ -7084,7 +7100,8 @@ public class NotificationManagerService extends SystemService {
                 && (record.getSuppressedVisualEffects() & SUPPRESSED_EFFECT_STATUS_BAR) != 0;
         if (!record.isUpdate
                 && record.getImportance() > IMPORTANCE_MIN
-                && !suppressedByDnd) {
+                && !suppressedByDnd
+                && isNotificationForCurrentUser(record)) {
             sendAccessibilityEvent(record);
             sentAccessibilityEvent = true;
         }
@@ -8747,6 +8764,12 @@ public class NotificationManagerService extends SystemService {
     protected boolean isCallingUidSystem() {
         final int uid = Binder.getCallingUid();
         return uid == Process.SYSTEM_UID;
+    }
+
+    protected boolean isCallingAppIdSystem() {
+        final int uid = Binder.getCallingUid();
+        final int appid = UserHandle.getAppId(uid);
+        return appid == Process.SYSTEM_UID;
     }
 
     protected boolean isUidSystemOrPhone(int uid) {

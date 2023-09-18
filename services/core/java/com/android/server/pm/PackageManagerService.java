@@ -5215,6 +5215,10 @@ public class PackageManagerService extends IPackageManager.Stub
                             InstantAppRegistry.DEFAULT_UNINSTALLED_INSTANT_APP_MIN_CACHE_PERIOD))) {
                 return;
             }
+
+            // 12. Clear temp install session files
+            mInstallerService.freeStageDirs(volumeUuid);
+
         } else {
             try {
                 mInstaller.freeCache(volumeUuid, bytes, 0, 0);
@@ -18689,7 +18693,9 @@ public class PackageManagerService extends IPackageManager.Stub
                 return PackageManager.DELETE_FAILED_INTERNAL_ERROR;
             }
 
-            if (isSystemApp(uninstalledPs)) {
+            if (isSystemApp(uninstalledPs)
+                    && (deleteFlags & PackageManager.DELETE_SYSTEM_APP) == 0) {
+
                 UserInfo userInfo = mUserManager.getUserInfo(userId);
                 if (userInfo == null || !userInfo.isAdmin()) {
                     Slog.w(TAG, "Not removing package " + packageName
@@ -25333,6 +25339,11 @@ public class PackageManagerService extends IPackageManager.Stub
         @Override
         public boolean isSuspendingAnyPackages(String suspendingPackage, int userId) {
             return PackageManagerService.this.isSuspendingAnyPackages(suspendingPackage, userId);
+        }
+
+        @Override
+        public int getInstalledSdkVersion(AndroidPackage pkg) {
+            return PackageManagerService.this.getSettingsVersionForPackage(pkg).sdkVersion;
         }
     }
 

@@ -721,6 +721,29 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                 });
 
 
+        mDeviceProvisionedController.addCallback(
+                new DeviceProvisionedListener() {
+                    @Override
+                    public void onDeviceProvisionedChanged() {
+                        updateCurrentUserIsSetup();
+                    }
+
+                    @Override
+                    public void onUserSwitched() {
+                        updateCurrentUserIsSetup();
+                    }
+
+                    @Override
+                    public void onUserSetupChanged() {
+                        updateCurrentUserIsSetup();
+                    }
+
+                    private void updateCurrentUserIsSetup() {
+                        setCurrentUserSetup(mDeviceProvisionedController.isCurrentUserSetup());
+                    }
+                });
+
+
         mFeatureFlags = featureFlags;
         mNotifPipeline = notifPipeline;
         mEntryManager = entryManager;

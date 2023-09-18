@@ -4786,9 +4786,11 @@ class AlarmManagerService extends SystemService {
                                         Intent.EXTRA_ALARM_COUNT, alarm.count),
                                 mDeliveryTracker, mHandler, null,
                                 allowWhileIdle ? mIdleOptions : getAlarmOperationBundle(alarm));
+
                         mHandler.sendMessageDelayed(
                                 mHandler.obtainMessage(AlarmHandler.PENDINGINTENT_TIMEOUT,
                                          alarm.operation), mConstants.LISTENER_TIMEOUT * 2);
+
                     } catch (PendingIntent.CanceledException e) {
                         if (alarm.repeatInterval > 0) {
                             // This IntentSender is no longer valid, but this
